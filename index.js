@@ -1,14 +1,21 @@
 // EDIT THIS FILE TO COMPLETE ASSIGNMENT QUESTION 1
-const { chromium } = require("playwright");
+import { exec } from "child_process";
 
 async function sortHackerNewsArticles() {
   // launch browser
-  const browser = await chromium.launch({ headless: false });
-  const context = await browser.newContext();
-  const page = await context.newPage();
+  
+  exec("npx playwright test", (error, stdout, stderr) => {
+    if (error) {
+      console.error(`Error executing test: ${error.message}`);
+      return;
+    }
+    if (stderr) {
+      console.error(`Test stderr: ${stderr}`);
+      return;
+    }
+    console.log(`Test output:\n${stdout}`);
+  });
 
-  // go to Hacker News
-  await page.goto("https://news.ycombinator.com/newest");
 }
 
 (async () => {
