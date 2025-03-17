@@ -2,7 +2,6 @@
 import { exec } from "child_process";
 
 async function sortHackerNewsArticles() {
-  // launch browser
   
   exec("npx playwright test", (error, stdout, stderr) => {
     if (error) {
@@ -13,7 +12,7 @@ async function sortHackerNewsArticles() {
       console.error(`Test stderr: ${stderr}`);
       return;
     }
-    console.log(`Test output:\n${stdout}`);
+    console.log(`Testing Hacker News:\n${stdout}`);
   });
 
 }
