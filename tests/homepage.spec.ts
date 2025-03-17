@@ -1,15 +1,16 @@
 import { test, expect, Page, BrowserContext, Locator } from "@playwright/test";
 import { testForHeaderLinks, testArticleCount, testEachArticleForPoints } from "./page-structure";
+import { SAVED_PAGES_FOLDER, HOMEPAGE_FILE } from '../global-values';
+import fs from "fs";
 
 let thisPage: Page;
 
-test.beforeAll(async ({browser}) => {
-  const context: BrowserContext = await browser.newContext();
+test.beforeAll(async ({ browser }) => {
+  let context = await browser.newContext();
   thisPage = await context.newPage();
-  await thisPage.goto("/news");
-
-  const header: Locator = thisPage.getByRole('cell', { name: 'Hacker News new | past | comments | ask | show | jobs | submit login' }).getByRole('table');
-  await header.waitFor({ state: 'visible' });
+  
+  const homePageContent: string = fs.readFileSync(SAVED_PAGES_FOLDER + "/" + HOMEPAGE_FILE, "utf-8");
+  thisPage.setContent(homePageContent);
 });
 
 test.describe("Homepage Tests", () => {

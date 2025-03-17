@@ -1,43 +1,71 @@
-import { chromium, test as setup, expect } from '@playwright/test';
-import fs from "fs";
+// ----------------------------------------
+// In setup, we store all the pages we need before any of the tests run.
+// This is so that we don't need to open new pages for each test if the test doesn't require any clicks, navigations, or any kind of change to the page.
+// It also allows me not repeatedly send requests to the Hacker News servers while I test my tests.
+// All because sending too many requests got me ip banned :D
+//-----------------------------------------
 
-// Prevent spamming the server with requests
-const RATE_LIMIT_TIMER: 500 = 500;
+import { chromium, test as setup, expect, Page, Browser, BrowserContext } from '@playwright/test';
+import fs from "fs";
+import { RATE_LIMIT_TIMER, SAVED_PAGES_FOLDER, HOMEPAGE_FILE } from '../global-values';
 
 setup('Preload pages', async () => {
   console.log('Running setup...');
+  
+  const browser: Browser = await chromium.launch();
+  const context: BrowserContext = await browser.newContext();
 
+  // Store homepage
+  await setupHomepage(context);
+  // Store 4 pages from newest page
+  await setupNewestPage(context);
+  
+  await browser.close();
+});
+
+async function setupHomepage(context: BrowserContext) {
+  // If page exist already, do not overwrite
+  if (fs.existsSync(SAVED_PAGES_FOLDER + "/homepageContent.html")) {
+    console.log("Homepage already exists, delete file or delete folder to write new pages")
+    return;
+  }
+  // If folder does not exist, create folder
+  if (!fs.existsSync(SAVED_PAGES_FOLDER)) {
+    fs.mkdirSync(SAVED_PAGES_FOLDER, { recursive: true })
+  }
+
+  const page = await context.newPage();
+  await page.goto("/news");
+  const homepageContent: string = await page.content();
+
+  fs.writeFileSync(SAVED_PAGES_FOLDER + "/" + HOMEPAGE_FILE, homepageContent);
+  console.log("Saved page: " + HOMEPAGE_FILE);
+}
+
+async function setupNewestPage(context: BrowserContext) {
+  // If pages exist already, do not overwrite
   for (let i: number = 1; i < 5; i++) {
-    if(!fs.existsSync(`saved-pages/newestPage${i}Content.html`)) {
+    if(!fs.existsSync(SAVED_PAGES_FOLDER + `/newestPage${i}Content.html`)) {
       break;
     }
     if (i === 4) {
-      console.log("All pages already exist, delete file or delete folder to write new pages")
+      console.log("Newest pages already exist, delete files or delete folder to write new pages")
       return;
     }
   }
-  
-  const browser = await chromium.launch();
-  const context = await browser.newContext();
-  const page = await context.newPage();
-
-  const moreButton = page.getByRole('link', { name: 'More', exact: true });
-
-
-  if (!fs.existsSync("saved-pages")) {
-    fs.mkdirSync("saved-pages", { recursive: true })
+  // If folder does not exist, create folder
+  if (!fs.existsSync(SAVED_PAGES_FOLDER)) {
+    fs.mkdirSync(SAVED_PAGES_FOLDER, { recursive: true })
   }
 
+  const page = await context.newPage();
   await page.goto("/newest");
+  const moreButton = page.getByRole('link', { name: 'More', exact: true });
 
   for (let i: number = 1; i < 5; i++) {
     const newestPageContent: string = await page.content();
-    if (!fs.existsSync(`saved-pages/newestPage${i}Content.html`)) {
-      fs.writeFileSync(`saved-pages/newestPage${i}Content.html`, newestPageContent);
-      console.log(`Saved new page: newestPage${i}Content.html`);
-    } else {
-      console.log(`Page newestPage${i}Content.html already exists, delete file or delete folder to write new page`)
-    }
+    fs.writeFileSync(SAVED_PAGES_FOLDER + `/newestPage${i}Content.html`, newestPageContent);
+    console.log(`Saved page: newestPage${i}Content.html`);
     if(i === 4)
       break;
     await Promise.all([
@@ -46,5 +74,4 @@ setup('Preload pages', async () => {
       new Promise(resolve => setTimeout(resolve, RATE_LIMIT_TIMER)),
     ]);
   }
-  await browser.close();
-});
+}
