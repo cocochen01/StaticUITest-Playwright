@@ -6,7 +6,7 @@
  */
 import { chromium, test as setup, expect, Page, Browser, BrowserContext } from '@playwright/test';
 import fs from "fs";
-import { RATE_LIMIT_TIMER, SAVED_PAGES_FOLDER, TEST_RESULTS_FOLDER, HOMEPAGE_FILE, COMMENTSPAGE_FILE } from '../global-values';
+import { RATE_LIMIT_TIMER, SAVED_PAGES_FOLDER, TEST_RESULTS_FOLDER, HOMEPAGE_FILE, COMMENTSPAGE_FILE } from './global-values';
 
 setup('Preload pages', async () => {
   console.log('Running setup...');

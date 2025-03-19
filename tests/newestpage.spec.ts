@@ -88,7 +88,7 @@ test.describe("Newest Page Tests", () => {
       await testForHeaderLinks(thisPage[i]);
     }
   });
-  test("Test 2: should have correct article count", async () => {
+  test(`Test 2: should have ${MAX_ARTICLES_PER_PAGE} articles`, async () => {
     for (let i = 0; i < 4; i++) {
       await testArticleCount(thisPage[i]);
     }
@@ -103,7 +103,7 @@ test.describe("Newest Page Tests", () => {
       await testEachArticleForTimestamps(thisPage[i]);
     }
   });
-  test(`Test 5: should have ${ARTICLE_CSV_LENGTH} articles sorted in time order`, async () => {
+  test(`Test 5: should have first ${ARTICLE_CSV_LENGTH} articles sorted in time order`, async () => {
     await createArticlesCSV();
     for (let i = 0; i < timestampArray.length - 1; i++) {
       expect(timestampArray[i]).toBeGreaterThanOrEqual(timestampArray[i + 1]);
