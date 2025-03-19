@@ -1,3 +1,6 @@
+/**
+ * Test functions for the Homepage
+ */
 import { test, expect, Page } from "@playwright/test";
 import { 
   testForHeaderLinks,

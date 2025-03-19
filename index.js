@@ -1,20 +1,12 @@
 // EDIT THIS FILE TO COMPLETE ASSIGNMENT QUESTION 1
-import { exec } from "child_process";
+import { spawn } from "child_process";
 
 async function sortHackerNewsArticles() {
-  
-  exec("npx playwright test", (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error executing test: ${error.message}`);
-      return;
-    }
-    if (stderr) {
-      console.error(`Test stderr: ${stderr}`);
-      return;
-    }
-    console.log(`Testing Hacker News:\n${stdout}`);
+  console.log("Starting HeckerNews Tests...");
+  spawn("npx", ["playwright", "test"], {
+    stdio: "inherit",
+    shell: true
   });
-
 }
 
 (async () => {

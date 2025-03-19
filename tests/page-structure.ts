@@ -1,5 +1,12 @@
+/**
+ * These helper functions are code that we can repeat for each page (homepage, newest page, etc.) to avoid having to write repetitive functions.
+ */
 import { expect, Page, Locator } from '@playwright/test';
 import { MAX_ARTICLES_PER_PAGE } from '../global-values';
+
+async function testForInternalLink(){
+
+}
 
 export async function testForHeaderLinks(page: Page) {
   const pagetop = page.locator(".pagetop").first();
@@ -17,14 +24,14 @@ export async function testForHeaderLinks(page: Page) {
 }
 
 export async function testArticleCount(page: Page) {
-  const articles: Locator = page.locator(".athing.submission");
+  const articles: Locator = page.locator(".athing");
   const articleCount: number = await articles.count();
 
   await expect(articleCount).toBe(MAX_ARTICLES_PER_PAGE);
 }
 
 export async function testEachArticleForPoints(page: Page) {
-  const articles = page.locator(".athing.submission");
+  const articles = page.locator(".athing");
   const subtext = page.locator(".subtext");
 
   const scoreRegex = /^[0-9]+ points?/;
@@ -52,7 +59,7 @@ export async function testEachArticleForPoints(page: Page) {
 }
 
 export async function testEachArticleForTimestamps(page: Page) {
-  const articles = page.locator(".athing.submission");
+  const articles = page.locator(".athing");
   const timestamp = page.locator(".age");
   const timestampHref = timestamp.locator("a");
 

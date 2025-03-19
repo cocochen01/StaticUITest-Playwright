@@ -1,10 +1,9 @@
-// ----------------------------------------
-// In setup, we store all the pages we need before any of the tests run.
-// This is so that we don't need to open new pages for each test if the test doesn't require any clicks, navigations, or any kind of change to the page.
-// It also allows me not repeatedly send requests to the Hacker News servers while I test my tests.
-// All because sending too many requests got me ip banned :D
-//-----------------------------------------
-
+/**
+ * In setup file, we store all the pages we need before any of the tests run.
+ * This is so that we don't need to open new pages for each test if the test doesn't require any clicks, navigations, or any kind of change to the page.
+ * It also allows me not repeatedly send requests to the Hacker News servers while I test my tests.
+ * All because sending too many requests got me ip banned :D
+ */
 import { chromium, test as setup, expect, Page, Browser, BrowserContext } from '@playwright/test';
 import fs from "fs";
 import { RATE_LIMIT_TIMER, SAVED_PAGES_FOLDER, TEST_RESULTS_FOLDER, HOMEPAGE_FILE } from '../global-values';
@@ -22,7 +21,7 @@ setup('Preload pages', async () => {
   if (!fs.existsSync(TEST_RESULTS_FOLDER)) {
     fs.mkdirSync(TEST_RESULTS_FOLDER, { recursive: true })
   }
-  
+
   // Store homepage
   await setupHomepage(context);
   // Store 4 pages from newest page

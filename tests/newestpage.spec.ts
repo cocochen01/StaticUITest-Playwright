@@ -1,3 +1,6 @@
+/**
+ * Test functions for the Newest page
+ */
 import { test, expect, Page, Locator } from "@playwright/test";
 import { 
   testForHeaderLinks,
@@ -18,7 +21,7 @@ let articleLinkArray: string[] = [];
 
 async function createArticlesCSV(){
   for (let i = 0; i < 4; i++) {
-    const articleID: Locator = thisPage[i].locator(".athing.submission");
+    const articleID: Locator = thisPage[i].locator(".athing");
     const titleline: Locator = thisPage[i].locator(".titleline > a:nth-child(1)");
     const timestamp: Locator = thisPage[i].locator(".age");
 
