@@ -41,9 +41,11 @@ export async function testEachArticleForPoints(page: Page) {
     const score = subtext.nth(i).locator(".score");
     
     if(await score.count() === 0) {
-      // If it has no score, check if it is internal post
-      //console.log(`Article ID: ${articleID} has no score, should be internal article from ycombinator.com`);
-      await expect(await articles.nth(i).getByRole('link', { name: 'ycombinator.com', exact: true}).count()).toBe(1);
+      // If it has no score, check if it is a job post
+      //console.log(`Article ID: ${articleID} has no score, should be a job posting`);
+      const articleTitle = await articles.nth(i).locator(".titleline").textContent();
+      const titleRegex = /^.+ \(YC [WS]\d{2}\).*$/;
+      await expect(articleTitle).toMatch(titleRegex);
     }
     else {
       const scoreString = await score.getAttribute("id");
