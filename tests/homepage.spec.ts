@@ -1,5 +1,10 @@
-import { test, expect, Page, BrowserContext, Locator } from "@playwright/test";
-import { testForHeaderLinks, testArticleCount, testEachArticleForPoints } from "./page-structure";
+import { test, expect, Page } from "@playwright/test";
+import { 
+  testForHeaderLinks,
+  testArticleCount,
+  testEachArticleForPoints,
+  testEachArticleForTimestamps
+} from "./page-structure";
 import { SAVED_PAGES_FOLDER, HOMEPAGE_FILE } from '../global-values';
 import fs from "fs";
 
@@ -22,5 +27,8 @@ test.describe("Homepage Tests", () => {
   });
   test("Test 3: should have points under each article", async () => {
     await testEachArticleForPoints(thisPage);
+  });
+  test("Test 4: should have timestamps under each article", async () => {
+    await testEachArticleForTimestamps(thisPage);
   });
 });

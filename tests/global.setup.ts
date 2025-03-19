@@ -7,7 +7,7 @@
 
 import { chromium, test as setup, expect, Page, Browser, BrowserContext } from '@playwright/test';
 import fs from "fs";
-import { RATE_LIMIT_TIMER, SAVED_PAGES_FOLDER, HOMEPAGE_FILE } from '../global-values';
+import { RATE_LIMIT_TIMER, SAVED_PAGES_FOLDER, TEST_RESULTS_FOLDER, HOMEPAGE_FILE } from '../global-values';
 
 setup('Preload pages', async () => {
   console.log('Running setup...');
@@ -15,6 +15,14 @@ setup('Preload pages', async () => {
   const browser: Browser = await chromium.launch();
   const context: BrowserContext = await browser.newContext();
 
+  // If folder does not exist, create folder
+  if (!fs.existsSync(SAVED_PAGES_FOLDER)) {
+    fs.mkdirSync(SAVED_PAGES_FOLDER, { recursive: true })
+  }
+  if (!fs.existsSync(TEST_RESULTS_FOLDER)) {
+    fs.mkdirSync(TEST_RESULTS_FOLDER, { recursive: true })
+  }
+  
   // Store homepage
   await setupHomepage(context);
   // Store 4 pages from newest page
@@ -28,10 +36,6 @@ async function setupHomepage(context: BrowserContext) {
   if (fs.existsSync(SAVED_PAGES_FOLDER + "/homepageContent.html")) {
     console.log("Homepage already exists, delete file or delete folder to write new pages")
     return;
-  }
-  // If folder does not exist, create folder
-  if (!fs.existsSync(SAVED_PAGES_FOLDER)) {
-    fs.mkdirSync(SAVED_PAGES_FOLDER, { recursive: true })
   }
 
   const page = await context.newPage();
@@ -52,10 +56,6 @@ async function setupNewestPage(context: BrowserContext) {
       console.log("Newest pages already exist, delete files or delete folder to write new pages")
       return;
     }
-  }
-  // If folder does not exist, create folder
-  if (!fs.existsSync(SAVED_PAGES_FOLDER)) {
-    fs.mkdirSync(SAVED_PAGES_FOLDER, { recursive: true })
   }
 
   const page = await context.newPage();
