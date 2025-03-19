@@ -1,7 +1,7 @@
 /**
  * Test functions for the Newest page
  */
-import { test, expect, Page, Locator } from "@playwright/test";
+import { test, expect, Page, Locator, BrowserContext } from "@playwright/test";
 import { 
   testForHeaderLinks,
   testArticleCount,
@@ -64,7 +64,7 @@ function writeValuesToCSV(articleIDs, titlelines, timestamps, articleLinks) {
   }
 
   let csvContent = "ID,Title,Timestamp,Link\n";
-  for (let i = 0; i < articleIDs.length; i++) {
+  for (let i: number = 0; i < articleIDs.length; i++) {
     csvContent += `"${articleIDs[i]}","${titlelines[i]}","${timestamps[i]}","${articleLinks[i]}"\n`;
   }
 
@@ -73,7 +73,7 @@ function writeValuesToCSV(articleIDs, titlelines, timestamps, articleLinks) {
 }
 
 test.beforeAll(async ({ browser }) => {
-  let context = await browser.newContext();
+  let context: BrowserContext = await browser.newContext();
 
   for (let i = 0; i < 4; i++) {
     thisPage[i] = await context.newPage();
@@ -84,28 +84,28 @@ test.beforeAll(async ({ browser }) => {
 
 test.describe("Newest Page Tests", () => {
   test("Test 1: should have header links", async () => {
-    for (let i = 0; i < 4; i++) {
+    for (let i: number = 0; i < 4; i++) {
       await testForHeaderLinks(thisPage[i]);
     }
   });
   test(`Test 2: should have ${MAX_ARTICLES_PER_PAGE} articles`, async () => {
-    for (let i = 0; i < 4; i++) {
+    for (let i: number = 0; i < 4; i++) {
       await testArticleCount(thisPage[i]);
     }
   });
   test("Test 3: should have points under each article", async () => {
-    for (let i = 0; i < 4; i++) {
+    for (let i: number = 0; i < 4; i++) {
       await testEachArticleForPoints(thisPage[i]);
     }
   });
   test("Test 4: should have timestamps under each article", async () => {
-    for (let i = 0; i < 4; i++) {
+    for (let i: number = 0; i < 4; i++) {
       await testEachArticleForTimestamps(thisPage[i]);
     }
   });
   test(`Test 5: should have first ${ARTICLE_CSV_LENGTH} articles sorted in time order`, async () => {
     await createArticlesCSV();
-    for (let i = 0; i < timestampArray.length - 1; i++) {
+    for (let i: number = 0; i < timestampArray.length - 1; i++) {
       expect(timestampArray[i]).toBeGreaterThanOrEqual(timestampArray[i + 1]);
     }
   });

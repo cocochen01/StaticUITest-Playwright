@@ -1,7 +1,7 @@
 /**
  * Test functions for the Comments page
  */
-import { test, expect, Page } from "@playwright/test";
+import { test, expect, Page, BrowserContext } from "@playwright/test";
 import { 
   testForHeaderLinks,
   testArticleCount,
@@ -13,7 +13,7 @@ import fs from "fs";
 let thisPage: Page;
 
 test.beforeAll(async ({ browser }) => {
-  let context = await browser.newContext();
+  let context: BrowserContext = await browser.newContext();
   thisPage = await context.newPage();
   
   const commentsPageContent: string = fs.readFileSync(SAVED_PAGES_FOLDER + "/" + COMMENTSPAGE_FILE, "utf-8");

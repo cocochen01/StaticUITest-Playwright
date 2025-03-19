@@ -4,10 +4,6 @@
 import { expect, Page, Locator } from '@playwright/test';
 import { MAX_ARTICLES_PER_PAGE } from '../global-values';
 
-async function testForInternalLink(){
-
-}
-
 export async function testForHeaderLinks(page: Page) {
   const pagetop = page.locator(".pagetop").first();
   await expect(pagetop).toBeVisible();
