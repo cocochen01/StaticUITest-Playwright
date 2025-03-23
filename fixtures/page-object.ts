@@ -1,8 +1,7 @@
 import type { Page, Locator } from '@playwright/test';
-import { Article, HOMEPAGE_FILE, MAX_ARTICLES_PER_PAGE, SAVED_PAGES_FOLDER } from '../global-values';
-import fs from 'fs';
+import { Article, MAX_ARTICLES_PER_PAGE } from '../global-values';
 
-export class Homepage {
+export class PageObject {
   public readonly headerLocator: Locator;
   public readonly articleElementsLocator: Locator;
   public articleObjectArray: Article[];
@@ -26,8 +25,7 @@ export class Homepage {
     }
   }
 
-  async setPageContent() {
-    const homePageContent: string = fs.readFileSync(SAVED_PAGES_FOLDER + "/" + HOMEPAGE_FILE, "utf-8");
-    await this.page.setContent(homePageContent);
+  async setPageContent(content: string) {
+    await this.page.setContent(content);
   }
 }

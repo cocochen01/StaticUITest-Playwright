@@ -10,7 +10,7 @@ import {
   testEachArticleForTimestamps
 } from "../fixtures/page-structure";
 import { MAX_ARTICLES_PER_PAGE } from "../global-values";
-
+// Homepage is a an custom text fixture
 test.describe("Homepage - Test page structure", () => {
   test("Test 1: should have header links", async ({ homepage }) => {
     await testForHeaderLinks(homepage);

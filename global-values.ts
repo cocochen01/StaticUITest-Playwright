@@ -6,6 +6,10 @@ export const ARTICLE_CSV_LENGTH: number = 100;
 export const SAVED_PAGES_FOLDER: string = "saved-pages";
 export const TEST_RESULTS_FOLDER: string = "test-results";
 export const HOMEPAGE_FILE: string = "homepageContent.html";
+export const NEWESTPAGE_COUNT: number = 4;
+export function getNewestPageFile(index: number): string {
+  return `newestPage${index}Content.html`;
+}
 
 export type Article = {
   titleLocator: Locator;

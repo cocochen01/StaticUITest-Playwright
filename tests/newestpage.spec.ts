@@ -1,8 +1,9 @@
 /**
  * Test functions for the Newest page
  */
-import { test, expect, Page, Locator, BrowserContext } from "@playwright/test";
+import { expect, Page, Locator, BrowserContext } from "@playwright/test";
 import { 
+  test,
   testForHeaderLinks,
   testArticleCount,
   //testEachArticleForPoints,
@@ -17,6 +18,7 @@ import {
   Article
 } from '../global-values';
 import fs from "fs";
+import { PageObject } from "../fixtures/page-object";
 
 const FILENAME_CSV: string = "articles.csv";
 
@@ -79,25 +81,13 @@ function writeValuesToCSV(articleIDs, titlelines, timestamps, articleLinks) {
   console.log(`CSV File Path: ${TEST_RESULTS_FOLDER + "/" + FILENAME_CSV}`);
 }
 
-test.beforeAll(async ({ browser }) => {
-  let context: BrowserContext = await browser.newContext();
-
-  for (let i = 0; i < 4; i++) {
-    thisPage[i] = await context.newPage();
-    const homePageContent: string = fs.readFileSync(SAVED_PAGES_FOLDER + `/newestPage${i+1}Content.html`, "utf-8");
-    thisPage[i].setContent(homePageContent);
-  }
-});
-
-test.describe.skip("Newest Page - Test page structure", () => {
-  for (let page: number = 0; page < 4; page++) {
-    test(`Test ${page * 2 + 1}: should have header links`, async () => {
-        await testForHeaderLinks(thisPage[page]);
-    });
-    test(`Test ${page * 2 + 2}: should have ${MAX_ARTICLES_PER_PAGE} articles`, async () => {
-        await testArticleCount(thisPage[page]);
-    });
-  }
+test.describe("Newest Pages - Test page structure", () => {
+  test("Test 1: should have header links", async ({ newestPages }) => {
+    const pagesArray: PageObject[] = await newestPages.getPages();
+    for(const page of pagesArray) {
+      await testForHeaderLinks(page);
+    }
+  });
 });
 
 test.describe.skip("Newest Page - Test article attributes", () => {

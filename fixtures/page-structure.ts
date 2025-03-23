@@ -2,24 +2,41 @@
  * These helper functions are code that we can repeat for each page (homepage, newest page, etc.) to avoid having to write repetitive functions.
  */
 import { test as base, expect, Page, Locator } from '@playwright/test';
-import { Article, MAX_ARTICLES_PER_PAGE } from '../global-values';
-import { Homepage } from './homepage';
+import { Article, getNewestPageFile, HOMEPAGE_FILE, MAX_ARTICLES_PER_PAGE, NEWESTPAGE_COUNT, SAVED_PAGES_FOLDER } from '../global-values';
+import { PageObject } from './page-object';
+import { NewestPages } from './newest-pages';
+import fs from 'fs';
 
 type Fixtures = {
-  homepage: Homepage;
-
+  homepage: PageObject;
+  newestPages: NewestPages;
 };
 
 export const test = base.extend<Fixtures>({
-  homepage: async ({page}, use) => {
-    const homepage = new Homepage(page);
-    await homepage.setPageContent();
+  homepage: async ({ page }, use) => {
+    const homePageContent: string = fs.readFileSync(SAVED_PAGES_FOLDER + "/" + HOMEPAGE_FILE, "utf-8");
+
+    const homepage = new PageObject(page);
+    await homepage.setPageContent(homePageContent);
     await use(homepage);
+  },
+  newestPages: async ({ browser }, use) => {
+    const newestPagesContent: string[] = [];
+
+    let pageArray: Page[] = [];
+    for(let i = 1; i <= NEWESTPAGE_COUNT; i++) {
+      const newestPageContent: string = fs.readFileSync(SAVED_PAGES_FOLDER + "/" + getNewestPageFile(i), "utf-8");
+      newestPagesContent.push(newestPageContent);
+      pageArray.push(await browser.newPage());
+    }
+    const newestPages = new NewestPages(pageArray);
+    newestPages.setPagesContent(newestPagesContent);
+    await use(newestPages);
   },
 });
 
-export async function testForHeaderLinks(homepage: Homepage) {
-  const pagetop = homepage.headerLocator;
+export async function testForHeaderLinks(pageObject: PageObject) {
+  const pagetop = pageObject.headerLocator;
   await expect(pagetop).toBeVisible();
   await Promise.all([
     expect(pagetop.getByRole('link', { name: 'Hacker News', exact: true })).toBeVisible(),
@@ -33,8 +50,8 @@ export async function testForHeaderLinks(homepage: Homepage) {
   ]);
 }
 
-export async function testArticleCount(homepage: Homepage) {
-  const articles: Locator = homepage.articleElementsLocator;
+export async function testArticleCount(pageObject: PageObject) {
+  const articles: Locator = pageObject.articleElementsLocator;
   const articleCount: number = await articles.count();
 
   expect(articleCount).toBe(MAX_ARTICLES_PER_PAGE);
