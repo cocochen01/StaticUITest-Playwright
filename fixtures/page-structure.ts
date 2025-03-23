@@ -1,11 +1,25 @@
 /**
  * These helper functions are code that we can repeat for each page (homepage, newest page, etc.) to avoid having to write repetitive functions.
  */
-import { expect, Page, Locator } from '@playwright/test';
+import { test as base, expect, Page, Locator } from '@playwright/test';
 import { Article, MAX_ARTICLES_PER_PAGE } from '../global-values';
+import { Homepage } from './homepage';
 
-export async function testForHeaderLinks(page: Page) {
-  const pagetop = page.locator(".pagetop").first();
+type Fixtures = {
+  homepage: Homepage;
+
+};
+
+export const test = base.extend<Fixtures>({
+  homepage: async ({page}, use) => {
+    const homepage = new Homepage(page);
+    await homepage.setPageContent();
+    await use(homepage);
+  },
+});
+
+export async function testForHeaderLinks(homepage: Homepage) {
+  const pagetop = homepage.headerLocator;
   await expect(pagetop).toBeVisible();
   await Promise.all([
     expect(pagetop.getByRole('link', { name: 'Hacker News', exact: true })).toBeVisible(),
@@ -19,8 +33,8 @@ export async function testForHeaderLinks(page: Page) {
   ]);
 }
 
-export async function testArticleCount(page: Page) {
-  const articles: Locator = page.locator(".athing");
+export async function testArticleCount(homepage: Homepage) {
+  const articles: Locator = homepage.articleElementsLocator;
   const articleCount: number = await articles.count();
 
   expect(articleCount).toBe(MAX_ARTICLES_PER_PAGE);
@@ -33,47 +47,26 @@ export async function testEachArticleForPoints(articleObject: Article) {
   if(await score.count() === 0) {
     // If it has no score, check if it is a job post
     //console.log(`Article ID: ${articleID} has no score, should be a job posting`);
-    const titleRegex = /^.+ \(YC [WS]\d{2}\).*$/;
-    expect(articleObject.titleLocator.textContent()).toMatch(titleRegex);
+    const titleRegex = /^.* \(YC [WS]\d{2}\).*$/;
+    const titleText = await articleObject.titleLocator.locator(".titleline").textContent();
+    expect(titleText).toMatch(titleRegex);
   }
   else {
+    const articleID = await articleObject.titleLocator.getAttribute("id");
     const scoreString = await score.getAttribute("id");
     const scoreID = scoreString ? scoreString.split("_")[1] : "";
 
-    expect(articleObject.id).toBe(scoreID);
+    expect(articleID).toBe(scoreID);
 
     //console.log(`Article ID: ${articleID}, Score: ${scoreTextContent}`);
     expect(await score.textContent()).toMatch(scoreRegex);
   }
-  
 }
 
 export async function testEachArticleForTimestamps(articleObject: Article) {
   const timestamp = articleObject.subtextLocator.getByText(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2} \d+/);
-  const timestampHref = timestamp.getAttribute("href");
+  const timestampHref = await articleObject.subtextLocator.locator(".age > a").getAttribute("href");
 
-  //console.log(`Article ID: ${articleID}, Timestamp Link: ${timestampHrefLink}`);
-  expect(timestampHref).toBe(`item?id=${articleObject.id}`);
-  
-}
-
-export async function saveArticle(page: Page): Promise<Article[]> {
-  let articleObjectArray: Article[] = [];
-
-  let table: Locator = page.getByRole("table");
-  for (let i = 1; i < MAX_ARTICLES_PER_PAGE + 1; i++) {
-    let title: Locator = table.getByRole("row").nth(i * 3 + 1);
-    let subtext: Locator = page.getByRole("row").nth(i * 3 + 2);
-    let spacer: Locator = page.getByRole("row").nth(i * 3 + 3);
-    const IDText:string = (await title.getAttribute("id")) ?? "";
-    let id = parseInt(IDText, 10);
-    
-    articleObjectArray.push({
-      titleLocator: title,
-      subtextLocator: subtext,
-      spacerLocator: spacer,
-      id: id
-    });
-  }
-  return articleObjectArray;
+  //console.log(`Timestamp Link: ${timestampHref}`);
+  expect(timestampHref).toBe(`item?id=${await articleObject.titleLocator.getAttribute("id")}`);
 }

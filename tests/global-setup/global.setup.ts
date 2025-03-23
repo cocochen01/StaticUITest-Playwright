@@ -6,7 +6,7 @@
  */
 import { chromium, test as setup, expect, Page, Browser, BrowserContext } from '@playwright/test';
 import fs from "fs";
-import { RATE_LIMIT_TIMER, SAVED_PAGES_FOLDER, TEST_RESULTS_FOLDER, HOMEPAGE_FILE, COMMENTSPAGE_FILE } from './global-values';
+import { RATE_LIMIT_TIMER, SAVED_PAGES_FOLDER, TEST_RESULTS_FOLDER, HOMEPAGE_FILE } from '../../global-values';
 
 setup('Preload pages', async () => {
   console.log('Running setup...');
@@ -25,7 +25,6 @@ setup('Preload pages', async () => {
   // Store homepage, 4 pages from newest page, and comments page
   await setupHomepage(context);
   await setupNewestPage(context);
-  await setupCommentsPage(context);
   
   await browser.close();
 });
@@ -73,19 +72,4 @@ async function setupNewestPage(context: BrowserContext) {
       new Promise(resolve => setTimeout(resolve, RATE_LIMIT_TIMER)),
     ]);
   }
-}
-
-async function setupCommentsPage(context: BrowserContext) {
-  // If page exist already, do not overwrite
-  if (fs.existsSync(SAVED_PAGES_FOLDER + "/" + COMMENTSPAGE_FILE)) {
-    console.log("Comments page already exists, delete file or delete folder to write new pages")
-    return;
-  }
-
-  const page = await context.newPage();
-  await page.goto("/newcomments");
-  const homepageContent: string = await page.content();
-
-  fs.writeFileSync(SAVED_PAGES_FOLDER + "/" + COMMENTSPAGE_FILE, homepageContent);
-  console.log("Saved page: " + COMMENTSPAGE_FILE);
 }

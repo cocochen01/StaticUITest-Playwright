@@ -1,37 +1,34 @@
 /**
  * Test functions for the Homepage
  */
-import { test, expect, Page } from "@playwright/test";
+//import { test, expect, Page } from "@playwright/test";
 import { 
+  test,
   testForHeaderLinks,
   testArticleCount,
   testEachArticleForPoints,
   testEachArticleForTimestamps
-} from "./page-structure";
-import { SAVED_PAGES_FOLDER, HOMEPAGE_FILE } from '../global-values';
-import fs from "fs";
+} from "../fixtures/page-structure";
+import { MAX_ARTICLES_PER_PAGE } from "../global-values";
 
-let thisPage: Page;
-
-test.beforeAll(async ({ browser }) => {
-  let context = await browser.newContext();
-  thisPage = await context.newPage();
-  
-  const homePageContent: string = fs.readFileSync(SAVED_PAGES_FOLDER + "/" + HOMEPAGE_FILE, "utf-8");
-  thisPage.setContent(homePageContent);
+test.describe("Homepage - Test page structure", () => {
+  test("Test 1: should have header links", async ({ homepage }) => {
+    await testForHeaderLinks(homepage);
+  });
+  test(`Test 2: should have ${MAX_ARTICLES_PER_PAGE} articles on page`, async ({ homepage }) => {
+    await testArticleCount(homepage);
+  });
 });
 
-test.describe.skip("Homepage Tests", () => {
-  test("Test 1: should have header links", async () => {
-    await testForHeaderLinks(thisPage);
+test.describe("Homepage - Test article attributes", () => {
+  test("Test 4: should have points under each article", async ({ homepage }) => {
+    for(const articleObject of homepage.articleObjectArray) {
+      await testEachArticleForPoints(articleObject);
+    }
   });
-  test("Test 2: should have correct article count", async () => {
-    await testArticleCount(thisPage);
-  });
-  test("Test 3: should have points under each article", async () => {
-    await testEachArticleForPoints(thisPage);
-  });
-  test("Test 4: should have timestamps under each article", async () => {
-    await testEachArticleForTimestamps(thisPage);
-  });
+  test("Test 5: should have timestamps under each article", async ({ homepage }) => {
+    for(const articleObject of homepage.articleObjectArray) {
+      await testEachArticleForTimestamps(articleObject);
+    }
+  })
 });

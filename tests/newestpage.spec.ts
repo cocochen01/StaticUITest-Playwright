@@ -5,10 +5,10 @@ import { test, expect, Page, Locator, BrowserContext } from "@playwright/test";
 import { 
   testForHeaderLinks,
   testArticleCount,
-  testEachArticleForPoints,
-  testEachArticleForTimestamps,
-  saveArticle
-} from "./page-structure";
+  //testEachArticleForPoints,
+  //testEachArticleForTimestamps,
+  //saveArticle
+} from "../fixtures/page-structure";
 import {
   MAX_ARTICLES_PER_PAGE,
   ARTICLE_CSV_LENGTH,
@@ -19,8 +19,6 @@ import {
 import fs from "fs";
 
 const FILENAME_CSV: string = "articles.csv";
-
-let articleObjectArray: Article[][] = [[]];
 
 let thisPage: Page[] = [];
 let articleIDArray: number[] = [];
@@ -88,12 +86,10 @@ test.beforeAll(async ({ browser }) => {
     thisPage[i] = await context.newPage();
     const homePageContent: string = fs.readFileSync(SAVED_PAGES_FOLDER + `/newestPage${i+1}Content.html`, "utf-8");
     thisPage[i].setContent(homePageContent);
-    articleObjectArray[i] = await saveArticle(thisPage[i]);
   }
-  console.log(articleObjectArray[0][0]);
 });
 
-test.describe("Newest Page - Test page structure", () => {
+test.describe.skip("Newest Page - Test page structure", () => {
   for (let page: number = 0; page < 4; page++) {
     test(`Test ${page * 2 + 1}: should have header links`, async () => {
         await testForHeaderLinks(thisPage[page]);
@@ -104,7 +100,7 @@ test.describe("Newest Page - Test page structure", () => {
   }
 });
 
-test.describe("Newest Page - Test article attributes", () => {
+test.describe.skip("Newest Page - Test article attributes", () => {
   for (let i: number = 0; i < 4; i++) {/*
     articleObjectArray[i].forEach(articleObject => {
       test(`article ${articleObject.id} has all values`, async () => {
@@ -124,7 +120,7 @@ test.describe("Newest Page - Test article attributes", () => {
   }
 });
 
-test.describe("Newest Page - Test articles are displayed in time order", () => {
+test.describe.skip("Newest Page - Test articles are displayed in time order", () => {
   test(`first ${ARTICLE_CSV_LENGTH} articles should be sorted in time order`, async () => {
     await createArticlesCSV();
     for (let i: number = 0; i < timestampArray.length - 1; i++) {

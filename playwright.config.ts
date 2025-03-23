@@ -37,12 +37,12 @@ export default defineConfig({
   projects: [
     {
       name: 'setup db',
-      testMatch: /global\.setup\.ts/,
+      testMatch: /global-setup\/global\.setup\.ts$/,
       teardown: 'cleanup db',
     },
     {
       name: 'cleanup db',
-      testMatch: /global\.teardown\.ts/,
+      testMatch: /global-setup\/global\.teardown\.ts$/,
     },
     {
       name: 'chromium',
