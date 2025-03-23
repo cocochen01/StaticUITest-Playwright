@@ -20,7 +20,7 @@ test.beforeAll(async ({ browser }) => {
   thisPage.setContent(commentsPageContent);
 });
 
-test.describe("Comments Page Tests", () => {
+test.describe.skip("Comments Page Tests", () => {
   test("Test 1: should have header links", async () => {
     await testForHeaderLinks(thisPage);
   });

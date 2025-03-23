@@ -2,7 +2,7 @@
 import { spawn } from "child_process";
 
 async function sortHackerNewsArticles() {
-  console.log("Starting HeckerNews Tests...");
+  console.log("Starting HackerNews Tests...");
   spawn("npx", ["playwright", "test"], {
     stdio: "inherit",
     shell: true

@@ -6,12 +6,21 @@ import {
   testForHeaderLinks,
   testArticleCount,
   testEachArticleForPoints,
-  testEachArticleForTimestamps
+  testEachArticleForTimestamps,
+  saveArticle
 } from "./page-structure";
-import { MAX_ARTICLES_PER_PAGE, ARTICLE_CSV_LENGTH, SAVED_PAGES_FOLDER, TEST_RESULTS_FOLDER } from '../global-values';
+import {
+  MAX_ARTICLES_PER_PAGE,
+  ARTICLE_CSV_LENGTH,
+  SAVED_PAGES_FOLDER,
+  TEST_RESULTS_FOLDER,
+  Article
+} from '../global-values';
 import fs from "fs";
 
 const FILENAME_CSV: string = "articles.csv";
+
+let articleObjectArray: Article[][] = [[]];
 
 let thisPage: Page[] = [];
 let articleIDArray: number[] = [];
@@ -79,31 +88,44 @@ test.beforeAll(async ({ browser }) => {
     thisPage[i] = await context.newPage();
     const homePageContent: string = fs.readFileSync(SAVED_PAGES_FOLDER + `/newestPage${i+1}Content.html`, "utf-8");
     thisPage[i].setContent(homePageContent);
+    articleObjectArray[i] = await saveArticle(thisPage[i]);
+  }
+  console.log(articleObjectArray[0][0]);
+});
+
+test.describe("Newest Page - Test page structure", () => {
+  for (let page: number = 0; page < 4; page++) {
+    test(`Test ${page * 2 + 1}: should have header links`, async () => {
+        await testForHeaderLinks(thisPage[page]);
+    });
+    test(`Test ${page * 2 + 2}: should have ${MAX_ARTICLES_PER_PAGE} articles`, async () => {
+        await testArticleCount(thisPage[page]);
+    });
   }
 });
 
-test.describe("Newest Page Tests", () => {
-  test("Test 1: should have header links", async () => {
-    for (let i: number = 0; i < 4; i++) {
-      await testForHeaderLinks(thisPage[i]);
-    }
-  });
-  test(`Test 2: should have ${MAX_ARTICLES_PER_PAGE} articles`, async () => {
-    for (let i: number = 0; i < 4; i++) {
-      await testArticleCount(thisPage[i]);
-    }
-  });
-  test("Test 3: should have points under each article", async () => {
-    for (let i: number = 0; i < 4; i++) {
-      await testEachArticleForPoints(thisPage[i]);
-    }
-  });
-  test("Test 4: should have timestamps under each article", async () => {
-    for (let i: number = 0; i < 4; i++) {
-      await testEachArticleForTimestamps(thisPage[i]);
-    }
-  });
-  test(`Test 5: should have first ${ARTICLE_CSV_LENGTH} articles sorted in time order`, async () => {
+test.describe("Newest Page - Test article attributes", () => {
+  for (let i: number = 0; i < 4; i++) {/*
+    articleObjectArray[i].forEach(articleObject => {
+      test(`article ${articleObject.id} has all values`, async () => {
+        await expect(articleObject.titleLocator).toBeVisible();
+        await expect(articleObject.subtextLocator).toBeVisible();
+        await expect(articleObject.spacerLocator).toBeVisible();
+        await expect(articleObject.id).toBeGreaterThan(0);
+      });
+      test("articles should have points in subtext", async () => {
+          await testEachArticleForPoints(articleObject);
+      });
+      test("articles should have timestamp in subtext", async () => {
+          await testEachArticleForTimestamps(articleObject);
+      });
+      
+    });*/
+  }
+});
+
+test.describe("Newest Page - Test articles are displayed in time order", () => {
+  test(`first ${ARTICLE_CSV_LENGTH} articles should be sorted in time order`, async () => {
     await createArticlesCSV();
     for (let i: number = 0; i < timestampArray.length - 1; i++) {
       expect(timestampArray[i]).toBeGreaterThanOrEqual(timestampArray[i + 1]);

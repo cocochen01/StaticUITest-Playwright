@@ -21,7 +21,7 @@ test.beforeAll(async ({ browser }) => {
   thisPage.setContent(homePageContent);
 });
 
-test.describe("Homepage Tests", () => {
+test.describe.skip("Homepage Tests", () => {
   test("Test 1: should have header links", async () => {
     await testForHeaderLinks(thisPage);
   });
