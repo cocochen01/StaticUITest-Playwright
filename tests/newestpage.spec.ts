@@ -4,7 +4,7 @@
 import { expect } from "@playwright/test"
 import { test } from "../fixtures/custom-fixtures.ts";
 import { Article, ARTICLE_CSV_LENGTH, FILENAME_CSV, MAX_ARTICLES_PER_PAGE, TEST_RESULTS_FOLDER } from "../global-values";
-import { testArticleArrayForRank, testArticleForExternalLink, testArticleForPoints, testArticleForUpvote } from "../helper-functions/article-structure.ts";
+import { testArticleArrayForRank, testArticleForExternalLink, testArticleForPoints, testArticleForTimestamps, testArticleForUpvote } from "../helper-functions/article-structure.ts";
 import { testArticleCount, testForHeaderLinks } from "../helper-functions/page-structure.ts";
 import { PageObject } from "../classes/page-object.ts";
 import fs from 'fs';
@@ -81,7 +81,7 @@ test.describe("Newest Pages - Test article attributes", () => {
     const pageObjectArray: PageObject[] = await newestPages.getPages();
     for(const pageObject of pageObjectArray) {
       for(const articleObject of pageObject.articleObjectArray) {
-        await testArticleForPoints(articleObject);
+        await testArticleForTimestamps(articleObject);
       }
     }
   });
