@@ -1,28 +1,13 @@
 /**
  * Test functions for the Newest page
  */
-import { expect, Page, Locator, BrowserContext, chromium } from "@playwright/test";
-import { 
-  test,
-  testForHeaderLinks,
-  testArticleCount,
-  testArticleForPoints,
-  //testEachArticleForPoints,
-  //testEachArticleForTimestamps,
-  //saveArticle
-} from "../fixtures/page-structure";
-import {
-  MAX_ARTICLES_PER_PAGE,
-  ARTICLE_CSV_LENGTH,
-  SAVED_PAGES_FOLDER,
-  TEST_RESULTS_FOLDER,
-  Article,
-  NEWESTPAGE_COUNT
-} from '../global-values';
-import fs from "fs";
-import { PageObject } from "../fixtures/page-object";
-
-const FILENAME_CSV: string = "articles.csv";
+import { expect } from "@playwright/test"
+import { test } from "../fixtures/custom-fixtures.ts";
+import { ARTICLE_CSV_LENGTH, FILENAME_CSV, MAX_ARTICLES_PER_PAGE, TEST_RESULTS_FOLDER } from "../global-values";
+import { testArticleForPoints } from "../helper-functions/article-structure.ts";
+import { testArticleCount, testForHeaderLinks } from "../helper-functions/page-structure.ts";
+import { PageObject } from "../classes/page-object.ts";
+import fs from 'fs';
 
 let articleIDArray: number[] = [];
 let titleTextArray: string[] = [];
@@ -49,6 +34,12 @@ test.describe("Newest Pages - Test page structure", () => {
     const pageObjectArray: PageObject[] = await newestPages.getPages();
     for(const pageObject of pageObjectArray) {
       await testForHeaderLinks(pageObject);
+    }
+  });
+  test(`Test 2: should have ${MAX_ARTICLES_PER_PAGE} articles on each page`, async ({ newestPages }) => {
+    const pageObjectArray: PageObject[] = await newestPages.getPages();
+    for(const pageObject of pageObjectArray) {
+      await testArticleCount(pageObject);
     }
   });
 });

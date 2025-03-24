@@ -1,16 +1,12 @@
 /**
  * Test functions for the Homepage
  */
-//import { test, expect, Page } from "@playwright/test";
-import { 
-  test,
-  testForHeaderLinks,
-  testArticleCount,
-  testArticleForPoints,
-  testArticleForTimestamps
-} from "../fixtures/page-structure";
+import { test } from "../fixtures/custom-fixtures.ts";
 import { MAX_ARTICLES_PER_PAGE } from "../global-values";
-// Homepage is a an custom text fixture
+import { testArticleForPoints, testArticleForTimestamps } from "../helper-functions/article-structure.ts";
+import { testArticleCount, testForHeaderLinks } from "../helper-functions/page-structure.ts";
+
+// Homepage is a custom page fixture
 test.describe("Homepage - Test page structure", () => {
   test("Test 1: should have header links", async ({ homepage }) => {
     await testForHeaderLinks(homepage);
