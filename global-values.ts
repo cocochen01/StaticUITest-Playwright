@@ -17,3 +17,5 @@ export type Article = {
   subtextLocator: Locator;
   spacerLocator: Locator;
 };
+
+export type PageNav = "news" | "newest";

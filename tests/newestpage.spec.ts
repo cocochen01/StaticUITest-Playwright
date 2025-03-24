@@ -3,8 +3,8 @@
  */
 import { expect } from "@playwright/test"
 import { test } from "../fixtures/custom-fixtures.ts";
-import { ARTICLE_CSV_LENGTH, FILENAME_CSV, MAX_ARTICLES_PER_PAGE, TEST_RESULTS_FOLDER } from "../global-values";
-import { testArticleForPoints } from "../helper-functions/article-structure.ts";
+import { Article, ARTICLE_CSV_LENGTH, FILENAME_CSV, MAX_ARTICLES_PER_PAGE, TEST_RESULTS_FOLDER } from "../global-values";
+import { testArticleArrayForRank, testArticleForExternalLink, testArticleForPoints, testArticleForUpvote } from "../helper-functions/article-structure.ts";
 import { testArticleCount, testForHeaderLinks } from "../helper-functions/page-structure.ts";
 import { PageObject } from "../classes/page-object.ts";
 import fs from 'fs';
@@ -30,13 +30,13 @@ async function writeValuesToCSV() {
 }
 
 test.describe("Newest Pages - Test page structure", () => {
-  test("Test 1: should have header links on each page", async ({ newestPages }) => {
+  test("should have header links on each page", async ({ newestPages }) => {
     const pageObjectArray: PageObject[] = await newestPages.getPages();
     for(const pageObject of pageObjectArray) {
       await testForHeaderLinks(pageObject);
     }
   });
-  test(`Test 2: should have ${MAX_ARTICLES_PER_PAGE} articles on each page`, async ({ newestPages }) => {
+  test(`should have ${MAX_ARTICLES_PER_PAGE} articles on each page`, async ({ newestPages }) => {
     const pageObjectArray: PageObject[] = await newestPages.getPages();
     for(const pageObject of pageObjectArray) {
       await testArticleCount(pageObject);
@@ -45,26 +45,50 @@ test.describe("Newest Pages - Test page structure", () => {
 });
 
 test.describe("Newest Pages - Test article attributes", () => {
-  test("Test 1: should have points under every article of each page", async ({ newestPages }) => {
+  test("should have rank for every article of each page", async ({ newestPages }) => {
+    const articleArrayAllPages: Article[][] = [[]];
+    const pageObjectArray: PageObject[] = await newestPages.getPages();
+    for(const pageObject of pageObjectArray) {
+      articleArrayAllPages.push(pageObject.articleObjectArray);
+    }
+    await testArticleArrayForRank(articleArrayAllPages.flat());
+  });
+  test("should have upvote link for every article (not job posting) of each page", async ({ newestPages }) => {
     const pageObjectArray: PageObject[] = await newestPages.getPages();
     for(const pageObject of pageObjectArray) {
       for(const articleObject of pageObject.articleObjectArray) {
-        testArticleForPoints(articleObject);
+        await testArticleForUpvote(articleObject, "newest");
       }
     }
   });
-  test("Test 2: should have timestamps under every article of each page", async ({ newestPages }) => {
+  test("should have external link for every article (not Ask HN) of each page", async ({ newestPages }) => {
     const pageObjectArray: PageObject[] = await newestPages.getPages();
     for(const pageObject of pageObjectArray) {
       for(const articleObject of pageObject.articleObjectArray) {
-        testArticleForPoints(articleObject);
+        await testArticleForExternalLink(articleObject);
+      }
+    }
+  });
+  test("should have points under every article (not job posting) of each page", async ({ newestPages }) => {
+    const pageObjectArray: PageObject[] = await newestPages.getPages();
+    for(const pageObject of pageObjectArray) {
+      for(const articleObject of pageObject.articleObjectArray) {
+        await testArticleForPoints(articleObject);
+      }
+    }
+  });
+  test("should have timestamps under every article of each page", async ({ newestPages }) => {
+    const pageObjectArray: PageObject[] = await newestPages.getPages();
+    for(const pageObject of pageObjectArray) {
+      for(const articleObject of pageObject.articleObjectArray) {
+        await testArticleForPoints(articleObject);
       }
     }
   });
 });
 
 test.describe("Newest Pages - Verify article order", () => {
-  test(`Test 1: first ${ARTICLE_CSV_LENGTH} articles are sorted in time order`, async ({ newestPages }) => {
+  test(`first ${ARTICLE_CSV_LENGTH} articles are sorted in time order`, async ({ newestPages }) => {
     const pageObjectArray: PageObject[] = await newestPages.getPages();
     for(const pageObject of pageObjectArray) {
       for(const articleObject of pageObject.articleObjectArray) {
