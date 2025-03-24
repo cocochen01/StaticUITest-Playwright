@@ -11,6 +11,7 @@ What this project does:
 - Stores the first 100 articles from the 'newest' pages in a data format of [ID, Title, Timestamp, Link] and writes it into a csv file
 - Tests the first 100 articles for time-order from newest to oldest
 - Uses asynchronous helper functions for repetitive tests
+- Uses custom fixture to handle repetitive setup code
 - Streams live output in the terminal and opens the html report as part of the project configuration
 - Adhere to Playwright best practices such as:
     - Maintaining test independence
