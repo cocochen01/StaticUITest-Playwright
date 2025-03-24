@@ -18,7 +18,8 @@ export class NewestPages {
       await this.pageObjectArray[i].setPageContent(contentArr[i]);
     }
   }
-  async getPages() {
+  
+  getPages() {
     return this.pageObjectArray;
   }
 }

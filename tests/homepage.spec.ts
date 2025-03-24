@@ -6,8 +6,8 @@ import {
   test,
   testForHeaderLinks,
   testArticleCount,
-  testEachArticleForPoints,
-  testEachArticleForTimestamps
+  testArticleForPoints,
+  testArticleForTimestamps
 } from "../fixtures/page-structure";
 import { MAX_ARTICLES_PER_PAGE } from "../global-values";
 // Homepage is a an custom text fixture
@@ -21,14 +21,14 @@ test.describe("Homepage - Test page structure", () => {
 });
 
 test.describe("Homepage - Test article attributes", () => {
-  test("Test 4: should have points under each article", async ({ homepage }) => {
+  test("Test 1: should have points under each article", async ({ homepage }) => {
     for(const articleObject of homepage.articleObjectArray) {
-      await testEachArticleForPoints(articleObject);
+      await testArticleForPoints(articleObject);
     }
   });
-  test("Test 5: should have timestamps under each article", async ({ homepage }) => {
+  test("Test 2: should have timestamps under each article", async ({ homepage }) => {
     for(const articleObject of homepage.articleObjectArray) {
-      await testEachArticleForTimestamps(articleObject);
+      await testArticleForTimestamps(articleObject);
     }
   })
 });
