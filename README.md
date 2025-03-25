@@ -1,7 +1,10 @@
 # 🐺 QA Wolf Take Home Assignment
 
-Modules: 'npm init playwright@latest'
-Run: 'node index.js'
+Modules:
+    npm i
+    npx playwright install
+Run:
+    node index.js
 
 What this project does:
 - Scrapes the Hacker News site and stores the homepage, 4 pages from the 'newest' page, and the comments page as raw html
