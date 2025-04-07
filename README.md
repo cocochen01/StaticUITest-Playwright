@@ -64,3 +64,6 @@ The custom fixures construct the page objects and keep the test setup separate f
 
 ## Report
 Playwright's test reports are configured in `playwright.config.ts`. At the end of the test, playwright will stream the results of the test in the terminal and open up an html report as per the config.
+
+## Demo
+![Demo Preview](./demo.gif)
