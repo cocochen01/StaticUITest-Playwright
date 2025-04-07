@@ -1,6 +1,6 @@
 import { test as base, Page } from '@playwright/test';
-import { NewestPages } from "../classes/newest-pages";
-import { PageObject } from "../classes/page-object";
+import { NewestPages } from "../page-objects/newest-pages";
+import { PageObject } from "../page-objects/page-object";
 import { getNewestPageFile, HOMEPAGE_FILE, NEWESTPAGE_COUNT, SAVED_PAGES_FOLDER } from '../global-values';
 import fs from 'fs';
 

@@ -6,7 +6,7 @@ import { test } from "../fixtures/custom-fixtures.ts";
 import { Article, ARTICLE_CSV_LENGTH, FILENAME_CSV, MAX_ARTICLES_PER_PAGE, TEST_RESULTS_FOLDER } from "../global-values";
 import { testArticleArrayForRank, testArticleForExternalLink, testArticleForPoints, testArticleForTimestamps, testArticleForUpvote } from "../helper-functions/article-structure.ts";
 import { testArticleCount, testForHeaderLinks } from "../helper-functions/page-structure.ts";
-import { PageObject } from "../classes/page-object.ts";
+import { PageObject } from "../page-objects/page-object.ts";
 import fs from 'fs';
 
 let articleIDArray: number[] = [];

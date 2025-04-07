@@ -3,7 +3,7 @@
  */
 import { expect, Locator } from '@playwright/test';
 import { MAX_ARTICLES_PER_PAGE } from '../global-values';
-import { PageObject } from '../classes/page-object';
+import { PageObject } from '../page-objects/page-object';
 
 export async function testForHeaderLinks(pageObject: PageObject) {
   const pagetop: Locator = pageObject.headerLocator;
