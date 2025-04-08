@@ -1,6 +1,6 @@
 
 # Static UI Testing with Playwright
-This project tests ycombinator.com news page for static UI elements.
+This project tests ycombinator.com news page for static UI elements using Playwright.
 
 ## What this project does
 - Scrapes the website and stores each page or pages of the that we are testing as static html files
