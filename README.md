@@ -22,7 +22,7 @@ This project tests ycombinator.com news page for static UI elements using Playwr
 ### Install modules:
 ```
 npm i
-npx playwright install
+npm playwright install
 ```
 ### Run all tests:
 ```
