@@ -49,12 +49,12 @@ List of all pages: all, home, new, past, comments, ask, jobs, submit
 - Homepage
 - Newest Page
     - Articles are sorted newest to oldest (tests first 4 pages)
-- Past Page
-- Comments Page
-- Ask Page
-- Show Page
-- Jobs Page
-- Submit Page
+- Past Page (not implemented)
+- Comments Page (not implemented)
+- Ask Page (not implemented)
+- Show Page (not implemented)
+- Jobs Page (not implemented)
+- Submit Page (not implemented)
 
 ### Page Object Model
 Tests utilize page objects that help organize page interactions. The page object class is reused for each of the pages, which are themselves an object containing an array of page objects.
