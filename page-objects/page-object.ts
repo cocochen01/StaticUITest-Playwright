@@ -7,7 +7,7 @@ export class PageObject {
   public articleObjectArray: Article[];
 
   constructor(public readonly page: Page) {
-    this.headerLocator = this.page.getByRole('cell', { name: 'Hacker News new | past | comments | ask | show | jobs | submit login' }).getByRole('table');
+    this.headerLocator = this.page.getByRole('cell').filter({ hasText: 'Hacker News' }).first();
     this.articleElementsLocator = this.page.locator(".athing");
     this.articleObjectArray = [];
 
