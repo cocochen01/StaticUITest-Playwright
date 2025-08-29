@@ -11,6 +11,7 @@ export const NEWESTPAGE_COUNT: number = 4;
 export function getNewestPageFile(index: number): string {
   return `newestPage${index}Content.html`;
 }
+export const PASTPAGE_FILE: string = "pastPageContent.html";
 
 export type Article = {
   titleLocator: Locator;
@@ -18,4 +19,4 @@ export type Article = {
   spacerLocator: Locator;
 };
 
-export type PageNav = "news" | "newest";
+export type PageNav = "news" | "newest" | "front" | "newcomments" | "ask" | "show" | "jobs" | "submit";
