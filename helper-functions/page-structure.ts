@@ -6,17 +6,17 @@ import { MAX_ARTICLES_PER_PAGE } from '../global-values';
 import { PageObject } from '../page-objects/page-object';
 
 export async function testForHeaderLinks(pageObject: PageObject) {
-  const pagetop: Locator = pageObject.headerLocator;
-  await expect(pagetop).toBeVisible();
+  const pageHeader: Locator = pageObject.headerLocator;
+  await expect(pageHeader).toBeVisible();
   await Promise.all([
-    expect(pagetop.getByRole('link', { name: 'Hacker News', exact: true })).toBeVisible(),
-    expect(pagetop.getByRole('link', { name: 'new', exact: true })).toBeVisible(),
-    expect(pagetop.getByRole('link', { name: 'past', exact: true })).toBeVisible(),
-    expect(pagetop.getByRole('link', { name: 'comments', exact: true })).toBeVisible(),
-    expect(pagetop.getByRole('link', { name: 'ask', exact: true })).toBeVisible(),
-    expect(pagetop.getByRole('link', { name: 'show', exact: true })).toBeVisible(),
-    expect(pagetop.getByRole('link', { name: 'jobs', exact: true })).toBeVisible(),
-    expect(pagetop.getByRole('link', { name: 'submit', exact: true })).toBeVisible(),
+    expect(pageHeader.getByRole('link', { name: 'Hacker News', exact: true })).toBeVisible(),
+    expect(pageHeader.getByRole('link', { name: 'new', exact: true })).toBeVisible(),
+    expect(pageHeader.getByRole('link', { name: 'past', exact: true })).toBeVisible(),
+    expect(pageHeader.getByRole('link', { name: 'comments', exact: true })).toBeVisible(),
+    expect(pageHeader.getByRole('link', { name: 'ask', exact: true })).toBeVisible(),
+    expect(pageHeader.getByRole('link', { name: 'show', exact: true })).toBeVisible(),
+    expect(pageHeader.getByRole('link', { name: 'jobs', exact: true })).toBeVisible(),
+    expect(pageHeader.getByRole('link', { name: 'submit', exact: true })).toBeVisible(),
   ]);
 }
 
