@@ -9,6 +9,16 @@ test.describe("Past Page - Test page structure", () => {
   test("should have header links", async ({ pastPage }) => {
     await testForHeaderLinks(pastPage);
   });
+  test("should have formatted date in header", async ({ pastPage }) => {
+    const headerText = await pastPage.headerLocator.textContent();
+    const dateValid = headerText?.match(/\d{4}-\d{2}-\d{2}/);
+    await expect(dateValid).toBeTruthy();
+
+    if (dateValid) {
+      const date = new Date(dateValid[0]);
+      expect(date.getTime()).not.toBeNaN();
+    }
+  });
   test(`should have ${MAX_ARTICLES_PER_PAGE} articles on page`, async ({ pastPage }) => {
     await testArticleCount(pastPage);
   });
