@@ -4,9 +4,9 @@
  * It also allows me not repeatedly send requests to the Hacker News servers while I test my tests.
  * All because sending too many requests got me ip banned :D
  */
-import { chromium, test as setup, expect, Page, Browser, BrowserContext } from '@playwright/test';
+import { chromium, test as setup, Browser, BrowserContext } from '@playwright/test';
 import fs from "fs";
-import { RATE_LIMIT_TIMER, SAVED_PAGES_FOLDER, TEST_RESULTS_FOLDER, HOMEPAGE_FILE } from '../../global-values';
+import { RATE_LIMIT_TIMER, SAVED_PAGES_FOLDER, TEST_RESULTS_FOLDER, HOMEPAGE_FILE, PASTPAGE_FILE } from '../../global-values';
 
 setup('Preload pages', async () => {
   console.log('Running setup...');
@@ -25,6 +25,7 @@ setup('Preload pages', async () => {
   // Store homepage, 4 pages from newest page, and comments page
   await setupHomepage(context);
   await setupNewestPage(context);
+  await setupPastPage(context);
   
   await browser.close();
 });
@@ -72,4 +73,19 @@ async function setupNewestPage(context: BrowserContext) {
       new Promise(resolve => setTimeout(resolve, RATE_LIMIT_TIMER)),
     ]);
   }
+}
+
+async function setupPastPage(context: BrowserContext) {
+  // If page exist already, do not overwrite
+  if (fs.existsSync(SAVED_PAGES_FOLDER + "/" + PASTPAGE_FILE)) {
+    console.log("Past page already exists, delete file or delete folder to write new pages")
+    return;
+  }
+
+  const page = await context.newPage();
+  await page.goto("/front");
+  const pastPageContent: string = await page.content();
+
+  fs.writeFileSync(SAVED_PAGES_FOLDER + "/" + PASTPAGE_FILE, pastPageContent);
+  console.log("Saved page: " + PASTPAGE_FILE);
 }
